@@ -28,24 +28,20 @@ main:
 	mov	r1, #1
 	bl	Init_GPIO
  
-gamne:
-  bl  drawGame
+game:
+  bl	drawGame
+  b	game
   
 
 drawGame:
-  bl  drawMap
-  bl  drawPad
-  bl  drawBall
-  bl  drawBrick
-  bl  drawWall
-  
-  bl  delay
+  bl	drawMap
+  bl	delay
 
 
 delay:
-  mov r0, #100
-  bl  delayMicrosecond
-  mov  pc, lr
+  mov	r0, #100
+  bl 	delayMicrosecond
+  mov 	pc, lr
 
 @ Data section
 .section .data
