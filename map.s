@@ -6,4 +6,4 @@ map:
 
 map_init:
 
-
+drawMap:
