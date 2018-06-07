@@ -43,6 +43,10 @@ yDimLoop:
 	add	r9, #1
 	b	xDimLoop
 
+stopLoop:
+	@ stop
+	haltLoop$:
+	b	haltLoop$
 
 @ Draw Pixel
 @  r0 - x
