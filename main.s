@@ -29,9 +29,6 @@ main:
 	bl	Init_GPIO
  
 gamne:
-  bl  SnesRead
-  
-  bl  updateGame
   bl  drawGame
   
 
