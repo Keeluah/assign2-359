@@ -1,13 +1,16 @@
+
 //Program written by Kevin Ng 30029178 and Jason Dam 30029092
 @The Program
 .section	.text
 
-.align2
+.align 2
 .global	Init_GPIO
 .global	write_Latch
 .global	write_Clock
 .global	read_Data
 .global	read_Snes
+
+@INITIALIZATION STUFF BELOW
 Init_GPIO:				//general initializing GPIO line instruction, this was done similarly to the way it was shown in lecture
 	mov	r2, r0			//move argument to r2
 	ldr	r0, =GpioPtr		//gpio base address
