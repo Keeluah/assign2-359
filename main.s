@@ -35,108 +35,14 @@ main:
 	mov	r1, #1
 	bl	Init_GPIO
 	
-snesLoop:				//beginning of snes loop
-	ldr	r0, =prompt		//user prompt message as argument
-	bl	printf
-	
-waitLoop:				//check button press/wait for a button press
-	bl	read_Snes		//call subroutine to read data from snes controller
-	mov	r4, #0			//loop counter
-	mov	r5, #1			//button sampler
-	lsl	r5, #15			//shift by 15
-readLoop:				//loop for reading all inputs in one cycle
-	mov	r6, r0			//returning argument from read_Snes into r6
-	mov	r8, r0			//same as above for r8
-	and	r6, r5			//and for checking button press
-	cmp	r6, #0			//compare and r6 with a string of zeros
-	beq	endReadLoop		//if they are equal, button is pressed, we assume one button pressed at a time
-	add	r4, #1			//else, increment loop by 1
-	lsr	r5, #1			//shift r5 right by one to check next bit
-	cmp	r4, #16			//check if looped 16 times yet
-	blt	readLoop		//if not read again with shifted number
-
-	b	waitLoop		//if nothing has been pressed for 16 cycles, start wait loop again
-
-endReadLoop:				//if button pressed
-	cmp	r4, #3			//if start is pressed
-	beq	end			//terminate
-					//checks if second bit was 0 (pressed), all instructions same as b, but using message for current button
-	cmp	r4, #6
-	bne	isJRight
-	ldr	r0, =0x00000000
-	b	printClr
-
-isJRight:				//checks if second bit was 0 (pressed), all instructions same as b, but using message for current button
-	cmp	r4, #7
-	bne	snesLoop
-	ldr	r0, =0xFFFF0000
-	b	printClr
-
-printClr:
-	mov	r2, r0
-	mov	r0, #555
-	mov	r1, #223
+//successfully passes button press from snesRead
+mainLoop:
+	bl	snesRead
+	teq	r0, #6		//left
+	bne	mainLoop
 	bl	drawingElements
-	//b	startScreenDrw
-	//bl	drawPad
-	//b	snesLoop
-
-pressHold:				//if a button is held
-	bl	read_Snes		//read data from controller
-	mov	r6, r0			//data argument is passed to r6
-	cmp	r6, r8			//compare to old instruction
-	bgt	letgo			//if not the same, they let go
-	b	pressHold		//else keep looping until they let go
-
-letgo:					//let go of button
-	b	snesLoop		//beginning of loop
-
-end:					//ending program
-	ldr	r0, =terminating	//print end message
-	bl	printf
-	b	exit			//exit program
-
-//startScreenDrw:
-//	mov		r10, r0
-//	mov		r9, #0
-//	mov		r8, #0
-//	ldr		r6, =startPositions			@ x
-//	ldr		r6, [r6]
-//	ldr		r7, =startPositions			@ y
-//	ldr		r7, [r7, #4]
-//
-//xDimLoop:
-//	mov		r0, r6
-//	mov		r1, r7
-//
-//	mov		r2, r10 	@ colour
-//	bl		DrawPixel
-//
-//	ldr		r2, =dimensions
-//	ldr		r2, [r2]		@0 = offset for X
-//	cmp		r8, r2
-//	bge		yDimLoop
-//	add		r6, #1
-//	add		r8, #1
-//	b		loopRestart
-//
-//yDimLoop:
-//	ldr		r2, =dimensions
-//	ldr		r2, [r2, #4]		@offset for Y dimension
-//	cmp		r9, r2
-//	bge		stopLoop
-//	mov		r8, #0
-//	ldr		r6, =startPositions
-//	ldr		r6, [r6]
-//	add		r7, #1
-//	add		r9, #1
-//	b		loopRestart
-
-//loopRestart:
-//	b	xDimLoop
-
-stopLoop:
-	b		snesLoop
+	b	mainLoop
+	
 
 
 @ Draw Pixel
@@ -203,8 +109,8 @@ initializeDriver:
 .global height
 .global paddle_position
 paddle_position:
-	.int	0
-	.int	0
+	.int	50
+	.int	50
 height:
 	.int	0
 .global width
@@ -222,11 +128,14 @@ dimensions:
 startPositions:
 	.int	50		@x start
 	.int	50		@y start
+
+.global prompt
 prompt:
 .asciz	"Please press button\n"
-
+.global bPressed
 bPressed:
-.asciz	"You have pressed %s\n"
+.asciz	"You have pressed %d\n"
 
+.global terminating
 terminating:
 .asciz	"You have pressed start\nProgram is Terminating...\n"
