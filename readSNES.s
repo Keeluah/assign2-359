@@ -2,8 +2,6 @@
 .global snesRead
 snesRead:				//beginning of snes loop
 	push	{r4-r8, lr}
-	ldr	r0, =prompt		//user prompt message as argument
-	bl	printf
 	
 waitLoop:				//check button press/wait for a button press
 	bl	read_Snes		//call subroutine to read data from snes controller
@@ -34,7 +32,7 @@ endReadLoop:				//if button pressed
 
 isJRight:				//checks if second bit was 0 (pressed), all instructions same as b, but using message for current button
 	cmp	r4, #7
-	bne	snesRead
+	bne	isNone
 	mov	r0, r4
 	b	endRead
 
@@ -42,6 +40,10 @@ end:					//ending program
 	ldr	r0, =terminating	//print end message
 	bl	printf
 	b	exit			//exit program
+
+isNone:
+	mov	r4, #0
+	mov	r0, r4
 
 endRead:
 	pop	{r4-r8, pc}

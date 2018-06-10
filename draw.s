@@ -1,16 +1,45 @@
 @Use this to draw things
 .section .text
 .global drawingElements
-
+.global drawHome
 drawingElements:
 	push	{r4-r5, lr}
 
 	bl		initDrawPaddle
 	ldr		r2, =paddleASCII
-	ldr		r4, =paddle_position
+	ldr		r4, =paddlePosition
 	ldr		r0, [r4]		// x coord
 	ldr		r1, [r4, #4]		// y coord
 	bl		drawObj
+
+	bl		initDrawMush
+	ldr		r2, =mush
+	ldr		r4, =paddlePosition
+	//ldr		r0, [r4]		// x coord
+	mov		r0, #50
+	//ldr		r1, [r4, #4]		// y coord
+	mov		r1, #50
+	bl		drawObj
+
+	pop	{r4-r5, pc}
+
+drawHome:
+	push	{r4-r5, lr}
+	//bl		initDrawHome
+
+	ldr		r2, =menuScreen
+	mov		r0, #0
+	mov		r1, #0
+
+	ldr	r4, =width
+	mov	r5, #768
+	str	r5, [r4]
+
+	ldr	r4, =height
+	mov	r5, #960
+	str	r5, [r4]
+
+	bl	drawObj
 
 	pop	{r4-r5, pc}
 
@@ -87,6 +116,29 @@ initDrawPaddle:
 	mov	r1, #32
 	str	r1, [r0]
 	bx	lr
+
+.global initDrawMush
+initDrawMush:
+	ldr	r0, =width
+	mov	r1, #16
+	str	r1, [r0]
+
+	ldr	r0, =height
+	mov	r1, #16
+	str	r1, [r0]
+	bx	lr
+
+.global initDrawHome
+initDrawHome:
+	ldr	r0, =width
+	mov	r1, #300
+	str	r1, [r0]
+
+	ldr	r0, =height
+	mov	r1, #960
+	str	r1, [r0]
+	bx	lr
+
 
 .section .data
 prompt:
