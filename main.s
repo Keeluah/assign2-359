@@ -1,7 +1,7 @@
 
 @ Code section
 .section .text
-
+.global	xDimLoop
 .global main
 main:
 	@ ask for frame buffer information
@@ -73,7 +73,12 @@ isJRight:				//checks if second bit was 0 (pressed), all instructions same as b,
 	b	printClr
 
 printClr:
-	b	startScreenDrw
+	mov	r2, r0
+	mov	r0, #555
+	mov	r1, #223
+	bl	drawingElements
+	//b	startScreenDrw
+	//bl	drawPad
 	//b	snesLoop
 
 pressHold:				//if a button is held
@@ -91,41 +96,44 @@ end:					//ending program
 	bl	printf
 	b	exit			//exit program
 
-startScreenDrw:
-	mov		r10, r0
-	mov		r9, #0
-	mov		r8, #0
-	ldr		r6, =startPositions			@ x
-	ldr		r6, [r6]
-	ldr		r7, =startPositions			@ y
-	ldr		r7, [r7, #4]
+//startScreenDrw:
+//	mov		r10, r0
+//	mov		r9, #0
+//	mov		r8, #0
+//	ldr		r6, =startPositions			@ x
+//	ldr		r6, [r6]
+//	ldr		r7, =startPositions			@ y
+//	ldr		r7, [r7, #4]
+//
+//xDimLoop:
+//	mov		r0, r6
+//	mov		r1, r7
+//
+//	mov		r2, r10 	@ colour
+//	bl		DrawPixel
+//
+//	ldr		r2, =dimensions
+//	ldr		r2, [r2]		@0 = offset for X
+//	cmp		r8, r2
+//	bge		yDimLoop
+//	add		r6, #1
+//	add		r8, #1
+//	b		loopRestart
+//
+//yDimLoop:
+//	ldr		r2, =dimensions
+//	ldr		r2, [r2, #4]		@offset for Y dimension
+//	cmp		r9, r2
+//	bge		stopLoop
+//	mov		r8, #0
+//	ldr		r6, =startPositions
+//	ldr		r6, [r6]
+//	add		r7, #1
+//	add		r9, #1
+//	b		loopRestart
 
-xDimLoop:
-	mov		r0, r6
-	mov		r1, r7
-
-	mov		r2, r10 	@ colour
-	bl		DrawPixel
-
-	ldr		r2, =dimensions
-	ldr		r2, [r2]		@0 = offset for X
-	cmp		r8, r2
-	bge		yDimLoop
-	add		r6, #1
-	add		r8, #1
-	b		xDimLoop
-
-yDimLoop:
-	ldr		r2, =dimensions
-	ldr		r2, [r2, #4]		@offset for Y dimension
-	cmp		r9, r2
-	bge		stopLoop
-	mov		r8, #0
-	ldr		r6, =startPositions
-	ldr		r6, [r6]
-	add		r7, #1
-	add		r9, #1
-	b		xDimLoop
+//loopRestart:
+//	b	xDimLoop
 
 stopLoop:
 	b		snesLoop
@@ -189,8 +197,19 @@ initializeDriver:
 .section .data
 
 .align 2
-.globl frameBufferInfo
-
+.global frameBufferInfo
+.global	dimensions
+.global startPositions
+.global height
+.global paddle_position
+paddle_position:
+	.int	0
+	.int	0
+height:
+	.int	0
+.global width
+width:
+	.int	0
 frameBufferInfo:
 	.int	0		@ frame buffer pointer
 	.int	0		@ screen width
