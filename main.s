@@ -29,6 +29,8 @@ mainLoop:
 	ldr	r1, [r1]
 	bl	printf
 	//bl	DrawObjects
+	mov	r0, #500
+	bl	delayMicroseconds
 	b	mainLoop
 
 

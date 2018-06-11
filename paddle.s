@@ -3,7 +3,7 @@
 updatePad:
 	push {r4-r8, lr}
   mov r5, r0    // saves r5
-  mov r6, #2    // base speed of the paddle
+  mov r6, #1    // base speed of the paddle
   
   ldr r4, =paddlePosition
   ldr r7, [r4]  // loads x position
@@ -19,7 +19,7 @@ updatePad:
   
 
 moveLeft:
-	mov	r8, #1
+	mov	r8, #0
 	add	r8, r7    // loads current position of the paddle
 	sub	r8, r6     // decrementing it to move left
 	//teq	r7, #50		//Boarder checking, we can use other value later
@@ -29,7 +29,7 @@ moveLeft:
 	b	checkPos
 
 moveRight:
-	mov	r8, #1
+	mov	r8, #0
 	add	r8, r7    // loads current position of the paddle
 	mov	r1, r7
 	add	r8, r6    // incrementing it to move right
