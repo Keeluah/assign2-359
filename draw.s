@@ -12,14 +12,96 @@ drawingElements:
 	ldr	r1, [r4, #4]		// y coord
 	bl	drawObj
 
-	bl	initDrawMush
-	ldr	r2, =mush
+	bl	initDrawBall
+	ldr	r2, =ballASCII
 	ldr	r4, =paddlePosition
-	mov	r0, #50
-	mov	r1, #50
+	ldr	r0, [r4]		// x coord
+	ldr	r1, [r4, #4]
+	add	r0, #24
+	sub	r1, #16
 	bl	drawObj
 
-	
+	bl	initDrawBg		//brick and bg has same res, so its fine using bg
+	mov	r4, #0
+	mov	r5, #0
+	mov	r6, #114
+	mov	r7, #146
+
+drawPurple:
+	ldr	r2, =purpleBrickASCII
+	mov	r0, r6
+	mov	r1, r7
+	teq	r5, #9
+	beq	drawPurple2
+	bl	drawObj
+	add	r5, #1
+	add	r6, #64
+	b	drawPurple
+
+drawPurple2:
+	teq	r4, #1
+	beq	drawRedStart
+	mov	r5, #0
+	mov	r6, #114
+	add	r4, #1
+	add	r7, #32
+	b	drawPurple
+
+drawRedStart:
+	bl	initDrawBg		//brick and bg has same res, so its fine using bg
+	mov	r4, #0
+	mov	r5, #0
+	mov	r6, #114
+	mov	r7, #210
+
+drawRed:
+	ldr	r2, =redBrickASCII
+	mov	r0, r6
+	mov	r1, r7
+	teq	r5, #9
+	beq	drawRed2
+	bl	drawObj
+	add	r5, #1
+	add	r6, #64
+	b	drawRed
+
+drawRed2:
+	teq	r4, #1
+	beq	drawBluestart
+	mov	r5, #0
+	mov	r6, #114
+	add	r4, #1
+	add	r7, #32
+	b	drawRed
+
+drawBluestart:
+	bl	initDrawBg		//brick and bg has same res, so its fine using bg
+	mov	r4, #0
+	mov	r5, #0
+	mov	r6, #114
+	mov	r7, #275
+
+drawBlue:
+	ldr	r2, =blueBrickASCII
+	mov	r0, r6
+	mov	r1, r7
+	teq	r5, #9
+	beq	drawBlue2
+	bl	drawObj
+	add	r5, #1
+	add	r6, #64
+	b	drawBlue
+
+drawBlue2:
+	teq	r4, #1
+	beq	exitDrawElements
+	mov	r5, #0
+	mov	r6, #114
+	add	r4, #1
+	add	r7, #32
+	b	drawBlue
+
+exitDrawElements:
 	pop	{r4-r7, pc}
 
 drawHome:
@@ -127,8 +209,8 @@ initDrawBg:
 	str	r1, [r0]
 	bx	lr
 
-.global initDrawMush
-initDrawMush:
+.global initDrawBall
+initDrawBall:
 	ldr	r0, =width
 	mov	r1, #16
 	str	r1, [r0]

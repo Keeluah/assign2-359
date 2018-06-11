@@ -25,6 +25,12 @@ endReadLoop:				//if button pressed
 	cmp	r4, #3			//if start is pressed
 	beq	end			//terminate
 					//checks if second bit was 0 (pressed), all instructions same as b, but using message for current button
+	cmp	r4, #1
+	bne	isJLeft
+	mov	r0, r4
+	b	endRead
+
+isJLeft:
 	cmp	r4, #6
 	bne	isJRight
 	mov	r0, r4

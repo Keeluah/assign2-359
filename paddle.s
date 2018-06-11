@@ -22,10 +22,6 @@ moveLeft:
 	mov	r8, #0
 	add	r8, r7    // loads current position of the paddle
 	sub	r8, r6     // decrementing it to move left
-	//teq	r7, #50		//Boarder checking, we can use other value later
-	//bgt	savePosition	//save position if not at border
-	//mov	r8, r7		//r8 = old position
-	//b	savePosition	//makes it so the paddle doesnt move.
 	b	checkPos
 
 moveRight:
@@ -33,15 +29,15 @@ moveRight:
 	add	r8, r7    // loads current position of the paddle
 	mov	r1, r7
 	add	r8, r6    // incrementing it to move right
-	//teq	r7, #600
-	//ble	savePosition
-	//mov	r8, r7
-	//b	savePosition
 
 checkPos:
-	cmp	r8, #50
+	ldr	r4, =screenRestrict
+	ldr	r7, [r4]
+	cmp	r8, r7
 	ble	noChange
-	cmp	r8, #600
+	ldr	r4, =screenRestrict
+	ldr	r7, [r4, #4]
+	cmp	r8, r7
 	bge	noChange
 	b	savePosition
 
@@ -59,6 +55,10 @@ end:
 @ Data section
 .section .data
 .global paddlePosition
+screenRestrict:
+	.int	114
+	.int	626
+
 paddlePosition:
 .int  434        // x position 9 blocks from the left
 .int  690        // y position 26 blocks from the top
