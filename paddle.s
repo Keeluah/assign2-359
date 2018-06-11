@@ -3,7 +3,7 @@
 updatePad:
 	push {r4-r8, lr}
   mov r5, r0    // saves r5
-  mov r6, #1    // base speed of the paddle
+  mov r6, #5    // base speed of the paddle
   
   ldr r4, =paddlePosition
   ldr r7, [r4]  // loads x position
@@ -60,5 +60,5 @@ end:
 .section .data
 .global paddlePosition
 paddlePosition:
-.int  338        // x position 9 blocks from the left
-.int  882        // y position 26 blocks from the top
+.int  434        // x position 9 blocks from the left
+.int  690        // y position 26 blocks from the top

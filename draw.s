@@ -3,25 +3,24 @@
 .global drawingElements
 .global drawHome
 drawingElements:
-	push	{r4-r5, lr}
+	push	{r4-r7, lr}
 
-	bl		initDrawPaddle
-	ldr		r2, =paddleASCII
-	ldr		r4, =paddlePosition
-	ldr		r0, [r4]		// x coord
-	ldr		r1, [r4, #4]		// y coord
-	bl		drawObj
+	bl	initDrawPaddle
+	ldr	r2, =paddleASCII
+	ldr	r4, =paddlePosition
+	ldr	r0, [r4]		// x coord
+	ldr	r1, [r4, #4]		// y coord
+	bl	drawObj
 
-	bl		initDrawMush
-	ldr		r2, =mush
-	ldr		r4, =paddlePosition
-	//ldr		r0, [r4]		// x coord
-	mov		r0, #50
-	//ldr		r1, [r4, #4]		// y coord
-	mov		r1, #50
-	bl		drawObj
+	bl	initDrawMush
+	ldr	r2, =mush
+	ldr	r4, =paddlePosition
+	mov	r0, #50
+	mov	r1, #50
+	bl	drawObj
 
-	pop	{r4-r5, pc}
+	
+	pop	{r4-r7, pc}
 
 drawHome:
 	push	{r4-r5, lr}
@@ -108,6 +107,17 @@ skipPxl:
 
 .global initDrawPaddle
 initDrawPaddle:
+	ldr	r0, =width
+	mov	r1, #64
+	str	r1, [r0]
+
+	ldr	r0, =height
+	mov	r1, #32
+	str	r1, [r0]
+	bx	lr
+
+.global	initDrawBg
+initDrawBg:
 	ldr	r0, =width
 	mov	r1, #64
 	str	r1, [r0]

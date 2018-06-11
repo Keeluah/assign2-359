@@ -9,7 +9,8 @@ main:
 	bl		initFbInfo
 
 	bl	initializeDriver		//initialize drivers
-	
+	bl	drawingElements
+	bl	drawMap
 //menu doesnt work yet, segmentation error
 //what does work is the moving the pad around and printing multiple things.
 startScreen:
@@ -23,14 +24,13 @@ mainLoop:
 	bl	snesRead
 	mov	r0, r0
 	bl	updatePad
+	bl	drawMap
 	bl	drawingElements
 	ldr	r0, =bPressed
 	ldr	r1, =paddlePosition
 	ldr	r1, [r1]
 	bl	printf
 	//bl	DrawObjects
-	mov	r0, #500
-	bl	delayMicroseconds
 	b	mainLoop
 
 
@@ -42,10 +42,7 @@ mainLoop:
 .global	dimensions
 .global startPositions
 .global height
-.global paddle_position
-paddle_position:
-	.int	50
-	.int	50
+
 height:
 	.int	0
 .global width
@@ -60,6 +57,7 @@ dimensions:
 	.int	768		@x - 10 64 pixel wide tiles + 2 boarder tiles wide
 	.int	960		@y - 64 x 16
 
+.global	startPositions
 startPositions:
 	.int	50		@x start
 	.int	50		@y start
