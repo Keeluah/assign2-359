@@ -4,16 +4,17 @@
 
 @ Input: r0 - snes button pressed
 updateBall:
+		push {r4-r8, lr}
 	ldr	r4, =ballPos
 	ldr	r5, [r4, #12] // loads ball start flag
 	
 	tst	r5, #1	// check if the ball has started moving
-	b.eq	freeMove	
+	beq	freeMove	
 	
 	tst	r0, #1	// check if b is pressed
 	mov	r6, #1
 	str	r6, [r4, #12]	// sets free ball flag to true
-	b.eq	freeMove
+	beq	freeMove
 
 	//if the ball is not free, it will move with the paddle
 	
@@ -28,11 +29,12 @@ freeMove:
 	bl	freeMoveBall
 
 exit:
-	mov	pc, lr
+	pop {r4-r8, pc}        // leaves subroutine
 
 
 .global freeMoveBall
 freeMoveBall:
+	push {r4-r8, lr}
 	ldr	r4, =ballPos
 	ldr	r5, [r4] // loads x position
 	ldr	r6, [r4, #4]	// loads y position
@@ -65,7 +67,7 @@ testNE:
 
 testNW:
 	tst	r7, #3	// check if direction flag is NW
-	bne	exit	// exits cause error in the direction flag
+	bne	moveExit	// exits cause error in the direction flag
 	sub	r8, #1	// moves left by 1
 	sub	r9, #1	// moves up by 1
 
@@ -75,7 +77,7 @@ collision:
 	bl	collisionCheck	// checks if new position collides with something
 
 @returns collision flag in r0 and new direction in r1
-	tst	r0, 0	// check if the flag is off
+	tst	r0, #0	// check if the flag is off
 	beq	savePosition	// goes to save if it did not collide
 	str	r1, [r4, #8]	// stores new direction
 	b	testBall	// loops again with new direction
@@ -84,22 +86,22 @@ savePosition:
 	str	r8, [r4]	// saves x position
 	str	r9, [r4, #4]	// saves y position
 	
-exit:
-	mov	pc, lr
+moveExit:
+	pop {r4-r8, pc}        // leaves subroutine
 
 .global collisionCheck
 @ input: r0 - x position, r1 - y position
 @ output: r0 - collision flag (1 for collided)
 @	  r1 - ball direction (if changed)
 collisionCheck:
-	mov	r0, 0
+	mov	r0, #0
 	mov	pc, lr
 
 @ Data section
 .section .data
 .global ballPos
 ballPos:
-	.int	354	// x pos
-	.int	866	// y pos
-	.int	1	// direction (0 - SE, 1 - SW, 2 - NE, 3 - NW)
+	.int	458	// x pos
+	.int	674	// y pos
+	.int	2	// direction (0 - SE, 1 - SW, 2 - NE, 3 - NW)
 	.int	0	// flags if the ball has left the paddle

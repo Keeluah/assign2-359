@@ -14,11 +14,9 @@ drawingElements:
 
 	bl	initDrawBall
 	ldr	r2, =ballASCII
-	ldr	r4, =paddlePosition
+	ldr	r4, =ballPos
 	ldr	r0, [r4]		// x coord
 	ldr	r1, [r4, #4]
-	add	r0, #24
-	sub	r1, #16
 	bl	drawObj
 
 	bl	initDrawBg		//brick and bg has same res, so its fine using bg

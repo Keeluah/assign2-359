@@ -27,6 +27,7 @@ mainLoop:
 	bl	snesRead
 	mov	r0, r0
 	bl	updatePad
+	bl	updateBall
 	bl	drawMap
 	bl	drawBorder
 	bl	drawingElements
