@@ -90,6 +90,10 @@ bPressed:
 terminating:
 .asciz	"You have pressed start\nProgram is Terminating...\n"
 
+.global paused
+paused:
+.asciz	"You have pressed select\nProgram is paused...\n"
+
 .global mapData
 mapData:
 	.byte	4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
