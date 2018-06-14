@@ -19,12 +19,16 @@ readLoop:				//loop for reading all inputs in one cycle
 	cmp	r4, #16			//check if looped 16 times yet
 	blt	readLoop		//if not read again with shifted number
 
-	b	waitLoop		//if nothing has been pressed for 16 cycles, start wait loop again
-
 endReadLoop:				//if button pressed
 	cmp	r4, #3			//if start is pressed
 	beq	end			//terminate
 					//checks if second bit was 0 (pressed), all instructions same as b, but using message for current button
+	cmp	r4, #8
+	bne	isY
+	mov	r0, r4
+	b	endRead
+
+isY:
 	cmp	r4, #1
 	bne	isJLeft
 	mov	r0, r4

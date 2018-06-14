@@ -56,8 +56,8 @@ end:
 .section .data
 .global paddlePosition
 screenRestrict:
-	.int	114
-	.int	626
+	.int	178
+	.int	690
 
 paddlePosition:
 .int  434        // x position 9 blocks from the left
