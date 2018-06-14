@@ -138,21 +138,60 @@ collideBottom:
 	ldr	r7, =bottomScreen
 	ldr	r8, [r7]
 	cmp	r5, r8	// check if the ball hit the bottom of the screen
-	blt	collideBrick	// continues collision check otherwise
+	blt	collidePad	// continues collision check otherwise
+
+resetBall:
 	ldr	r7, =ballPos	// loads address of ball position
-	mov	r8, #0
-	str	r8, [r7, #12]
+	mov	r8, #0		
+	str	r8, [r7, #12]	// set flag so ball stops moving freely
 	mov	r8, #2
-	str	r8, [r7, #8]
+	str	r8, [r7, #8]	// set direction flag back to NE
 	mov	r8, r5	
-	sub	r8, #64
-	str	r8, [r7, #4]
+	sub	r8, #65
+	str	r8, [r7, #4]	// places ball back ontop of the paddle
 	mov	r3, #1
 	b	exitCheck
+
+collidePad:
+	// checks y portion of the paddle
+	ldr	r7, =paddlePosition
+	ldr	r8, [r7, #4]	// loads pad's y position
+	cmp	r5, r8
+	blt	collideBrick
+	add	r8, #4
+	cmp	r5, r8
+	bgt	collideBrick
+	// check x portion of the paddle
+	ldr	r8, [r7]	// load pad's x position
+	cmp	r4, r8
+	blt	collideBrick
+	add	r8, #16
+	cmp	r4, r8	// check if the ball hits the left edge of the paddle
+	bgt	checkInsidePad
+	mov	r6, #3	// change movement to NW
+	b	collided
+	
+checkInsidePad:
+	add	r8, #32
+	cmp	r4, r8	// check if the ball hits the inside of the pad
+	bgt	checkRightEdge
+	cmp	r6, #0	// check if ball moving SE
+	moveq	r6, #2	// change to NE if so
+	cmp	r6, #1	// check if ball moving SW
+	moveq	r6, #3	// change to SE if so	
+	b	collided
+
+checkRightEdge:
+	add	r8, #16	
+	cmp	r4, r8	// check if the ball hits the right edge of the paddle
+	bgt	collideBrick
+	mov	r6, #2	// change direction to NE
+	b	collided	
 
 collideBrick:
 	mov	r0, #0
 	b	exitCheck
+
 
 collided:
 	mov	r0, #1
