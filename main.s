@@ -3,12 +3,16 @@
 .section .text
 .global	xDimLoop
 .global main
+.global gameScr
 main:
 	@ ask for frame buffer information
 	ldr 		r0, =frameBufferInfo 	@ frame buffer information structure
 	bl		initFbInfo
 
 	bl	initializeDriver		//initialize drivers
+	bl	drawHome
+
+gameScr:	
 	bl	drawMap
 	bl	drawingElements
 	//bl 	drawBorder
@@ -21,6 +25,8 @@ startScreen:
 	//bl	drawHome
 	bl	snesRead
 	teq	r0, #7
+	beq	mainLoop
+	teq	r0, #6
 	bne	startScreen
 
 //successfully passes button press from snesRead
@@ -64,8 +70,8 @@ dimensions:
 
 .global	startPositions
 startPositions:
-	.int	114		@x start
-	.int	82		@y start
+	.int	50		@x start
+	.int	50		@y start
 
 .global	startBorderPositions
 startBorderPositions:

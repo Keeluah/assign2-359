@@ -1,7 +1,6 @@
 @Use this to draw things
 .section .text
 .global drawingElements
-.global drawHome
 drawingElements:
 	push	{r4-r7, lr}
 
@@ -22,25 +21,6 @@ drawingElements:
 exitDrawElements:
 	pop	{r4-r7, pc}
 
-drawHome:
-	push	{r4-r5, lr}
-	//bl		initDrawHome
-
-	ldr		r2, =menuScreen
-	mov		r0, #0
-	mov		r1, #0
-
-	ldr	r4, =width
-	mov	r5, #768
-	str	r5, [r4]
-
-	ldr	r4, =height
-	mov	r5, #960
-	str	r5, [r4]
-
-	bl	drawObj
-
-	pop	{r4-r5, pc}
 
 .global drawObj
 @This will be used to draw objects
@@ -141,15 +121,19 @@ initDrawBall:
 .global initDrawHome
 initDrawHome:
 	ldr	r0, =width
-	mov	r1, #300
+	mov	r1, #704
 	str	r1, [r0]
 
 	ldr	r0, =height
-	mov	r1, #960
+	mov	r1, #704
 	str	r1, [r0]
 	bx	lr
 
 
 .section .data
+.global menuPos
 prompt:
 	.asciz	"test"
+menuPos:
+	.int 50
+	.int 50

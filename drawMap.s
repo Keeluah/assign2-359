@@ -71,7 +71,7 @@ forXTest:
 	
 forYTest:	
 	add	r6, #1		// y++
-	cmp	r6, #21
+	cmp	r6, #22
 	beq	exitLoop
 	b	forYLoop
 
