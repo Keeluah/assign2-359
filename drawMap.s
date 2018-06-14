@@ -1,116 +1,79 @@
 .section .text
 .global drawMap
-.global	drawBorder
 drawMap:
-	push	{r4-r7, lr}
-	bl	initDrawBg	
-	mov	r5, #0
-	mov	r6, #0
+	push	{r4-r9, lr}
 	ldr	r4, =startPositions
 
-bgDrawLoopX:
-	ldr	r2, =bgTiles	
-	ldr	r0, [r4]
-	ldr	r1, [r4, #4]
-	bl	drawObj
-	teq	r5, #8
-	beq	bgDrawLoopY
-	add	r5, #1
-	ldr	r4, =startPositions
-	ldr	r7, [r4]
-	add	r7, #64
-	str	r7, [r4]
-	b	bgDrawLoopX
+	mov	r6, #0		// y = 0
 
-bgDrawLoopY:
-	mov	r7, #114
-	str	r7, [r4]
+forYLoop:
+	
+	mov	r7, #0		// x = 0
+forXLoop:
+	// loads arguments
+	ldr	r2, [r4]	// loads x start
+	ldr	r3, [r4, #4]	// loads y start
+	
+	mov	r0, r7		// saves x cell
+	mov	r9, #64
+	mul	r0, r9		// multiply it with width of a cell
+	add	r0, r2		// align with start position
 
-	ldr	r7, [r4, #4]
-	add	r7, #32
-	str	r7, [r4, #4]
+	mov	r1, r6		// saves y cell
+	mov	r9, #32
+	mul	r1, r9		// multiply with height of a cell
+	add	r1, r3		// align with start position
 
-	teq	r6, #20
-	beq	exitbg
-	add	r6, #1
-	mov	r5, #0
-	b	bgDrawLoopX
+	// calulate offset
 
-exitbg:
-	mov	r7, #114
-	str	r7, [r4]
-	mov	r7, #82
-	str	r7, [r4, #4]
-	pop	{r4-r7, pc}
+	mov	r8, r6	// saves y
+	mov	r9, #11
+	mul	r8, r9	// y * 11
+	add	r8, r7	// y * 11 + x (the array coordinate)
+	
+	ldr	r5, =mapData
+	ldrb	r9, [r5, r8]	// loads the array, offsetting by y * |row| + x
 
-@---------------Drawing the Border--------------------------------------------------
+// TESTS FOR CELL TYPES
+testBGTile:
+	cmp	r9, #0
+	bne	testFirstTile
+	bl	drawWallCell
+	b	forXTest
+	
 
-drawBorder:
-	push	{r4-r7, lr}
-	bl	initDrawBg
-	mov	r5, #0
-	mov	r6, #0
-	ldr	r4, =startBorderPositions
+testFirstTile:
+	cmp	r9, #1
+	bne	testSecondTile
+	bl	drawPurpleCell
+	b	forXTest
 
-drawTop:
-	ldr	r2, =borderTileASCII	
-	ldr	r0, [r4]
-	ldr	r1, [r4, #4]
-	teq	r5, #11
-	beq	drawLeftStart
-	bl	drawObj
-	add	r5, #1
-	ldr	r4, =startBorderPositions
-	ldr	r7, [r4]
-	add	r7, #64
-	str	r7, [r4]
-	b	drawTop
+testSecondTile:
+	cmp	r9, #2
+	bne	testThirdTile
+	bl	drawBlueCell
+	b	forXTest
 
-drawLeftStart:
-	mov	r5, #0
-	mov	r7, #690
-	str	r7, [r4]
-	mov	r7, #50
-	str	r7, [r4, #4]
+testThirdTile:
+	cmp	r9, #3
+	bne	testWallTile
+	bl	drawRedCell
+	b	forXTest
 
-drawLeft:
-	ldr	r2, =borderTileASCII	
-	ldr	r0, [r4]
-	ldr	r1, [r4, #4]
-	teq	r5, #22
-	beq	drawRightStart
-	//beq	exitborderloop
-	bl	drawObj
-	add	r5, #1
-	ldr	r4, =startBorderPositions
-	ldr	r7, [r4, #4]
-	add	r7, #32
-	str	r7, [r4, #4]
-	b	drawLeft
+testWallTile:
+	bl	drawBorderCell
+	b	forXTest	
 
-drawRightStart:
-	mov	r5, #0
-	mov	r7, #50
-	str	r7, [r4]
-	mov	r7, #50
-	str	r7, [r4, #4]
+forXTest:
+	add	r7, #1		// x++
+	cmp	r7, #11
+	bne	forXLoop
+	
+forYTest:	
+	add	r6, #1		// y++
+	cmp	r6, #21
+	beq	exitLoop
+	b	forYLoop
 
-drawRight:
-	ldr	r2, =borderTileASCII	
-	ldr	r0, [r4]
-	ldr	r1, [r4, #4]
-	teq	r5, #22
-	beq	exitborderloop
-	bl	drawObj
-	add	r5, #1
-	ldr	r4, =startBorderPositions
-	ldr	r7, [r4, #4]
-	add	r7, #32
-	str	r7, [r4, #4]
-	b	drawRight
-
-exitborderloop:
-	mov	r7, #50
-	str	r7, [r4]
-	str	r7, [r4, #4]
-	pop	{r4-r7, pc}
+exitLoop:
+	pop	{r4-r9, pc}

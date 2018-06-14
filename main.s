@@ -10,8 +10,10 @@ main:
 
 	bl	initializeDriver		//initialize drivers
 	bl	drawMap
-	bl	drawBorder
 	bl	drawingElements
+	//bl 	drawBorder
+	
+	
 
 //menu doesnt work yet, segmentation error
 //what does work is the moving the pad around and printing multiple things.
@@ -20,7 +22,6 @@ startScreen:
 	bl	snesRead
 	teq	r0, #7
 	bne	startScreen
-	bl	drawingElements
 
 //successfully passes button press from snesRead
 mainLoop:
@@ -29,7 +30,6 @@ mainLoop:
 	bl	updatePad
 	bl	updateBall
 	bl	drawMap
-	bl	drawBorder
 	bl	drawingElements
 	ldr	r0, =bPressed
 	ldr	r1, =paddlePosition
@@ -83,3 +83,34 @@ bPressed:
 .global terminating
 terminating:
 .asciz	"You have pressed start\nProgram is Terminating...\n"
+
+.global mapData
+mapData:
+	.byte	4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4
+	.byte	4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4
+	.byte	4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4
+	.byte	4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4
+	.byte	4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4
+	.byte	4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+
+.global	test
+test:
+	.asciz	"%d"
