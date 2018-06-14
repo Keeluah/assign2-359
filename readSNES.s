@@ -55,6 +55,12 @@ isJLeft:
 
 isJRight:				//checks if second bit was 0 (pressed), all instructions same as b, but using message for current button
 	cmp	r4, #7
+	bne	isSelect
+	mov	r0, r4
+	b	endRead
+
+isSelect:
+	cmp	r4, #2
 	bne	isNone
 	mov	r0, r4
 	b	endRead
