@@ -189,9 +189,33 @@ checkRightEdge:
 	b	collided	
 
 collideBrick:
+	ldr	r7, =mapData
+	mov	r9, r4	// save x coordinates
+	mov	r10, r5	// save y coordinates
+	
+	// calculating array offset for map data
+	sub	r9, #50		// remove start position
+	sub	r10, #50	// remove start position
+	mov	r8, #64
+	udiv	r9, r8		// divide by cell width
+	mov	r8, #32
+	udiv	r10, r8		// divide by cell height
+
+	mov	r8, #11
+	mov	r11, r10	// save r10
+	mul	r11, r8		// multiply y by the # of cells in a row
+	add	r11, r9		// add the x cell position
+
+	ldr	r8, [r7, r11]	// load the map data of the cell the ball is on
+	cmp	r8, #0
+	beq	noCollision
+
+	sub	r8, #1
+	str	r8, [r7, r11]
+
+noCollision:
 	mov	r0, #0
 	b	exitCheck
-
 
 collided:
 	mov	r0, #1
