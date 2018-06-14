@@ -210,12 +210,64 @@ collideBrick:
 	cmp	r8, #0
 	beq	noCollision
 
-	sub	r8, #1
-	str	r8, [r7, r11]
+	sub	r8, #1		// reduce brick toughness by 1
+	str	r8, [r7, r11]	// saves brick toughness
+	
+	// find x cordinate of the brick
+	mov	r8, #64
+	mul	r9, r8
+	add	r9, #50
+	
+	// find y cordinate of the brick
+	mov	r8, #32
+	mul	r10, r8
+	add	r10, #50
+	
+checkHitAbove:
+	mov	r8, r10
+	cmp	r5, r8	// compare brick y and ball y
+	bgt	checkHitBelow
+	
+	cmp	r6, #0	// check if ball moving SE
+	moveq	r6, #2	// change to NE if so
+	cmp	r6, #1	// check if ball moving SW
+	moveq	r6, #3	// change to SE if so	
+	b	collided
+
+checkHitBelow:
+	add	r8, #28
+	cmp	r5, r8
+	blt	checkHitLeft
+	
+	cmp	r6, #2	// check if ball moving NE
+	moveq	r6, #0	// change to SE if so
+	cmp	r6, #3	// check if ball moving NW
+	moveq	r6, #1	// change to SW if so
+	b 	collided
+	
+checkHitLeft:
+	mov	r8, r9	// save x position
+	cmp	r4, r9
+	bgt	CheckHitRight
+	
+	cmp	r6, #0	// check if ball moving SE
+	moveq	r6, #1	// change to SW if so
+	cmp	r6, #2	// check if ball moving NE
+	moveq	r6, #3	// change to NW if so
+	b 	collided	// tells routine ball collided returns to calling
+
+checkHitRight:	
+	cmp	r6, #1	// check if ball moving SW
+	moveq	r6, #0	// change to SE if so
+	cmp	r6, #3	// check if ball moving NW
+	moveq	r6, #2	// change to NE if so
+	b 	collided	// tells routine ball collided returns to calling
+
 
 noCollision:
 	mov	r0, #0
 	b	exitCheck
+
 
 collided:
 	mov	r0, #1
