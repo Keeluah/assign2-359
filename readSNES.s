@@ -22,7 +22,20 @@ readLoop:				//loop for reading all inputs in one cycle
 endReadLoop:				//if button pressed
 	cmp	r4, #3			//if start is pressed
 	beq	end			//terminate
+
+
 					//checks if second bit was 0 (pressed), all instructions same as b, but using message for current button
+	cmp	r4, #4
+	bne	isUp
+	mov	r0, r4
+	b	endRead
+isUp
+	cmp	r4, #5
+	bne	isA
+	mov	r0, r4
+	b	endRead
+
+isA:
 	cmp	r4, #8
 	bne	isY
 	mov	r0, r4
