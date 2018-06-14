@@ -98,7 +98,7 @@ moveExit:
 @ output: r0 - collision flag (1 for collided)
 @	  r1 - ball direction (if changed)
 collisionCheck:
-	push {r4-r8, lr}
+	push {r4-r12, lr}
 
 	mov	r4, r0	// saves x position
 	mov	r5, r1	// saves y position
@@ -196,18 +196,18 @@ collideBrick:
 	// calculating array offset for map data
 	sub	r9, #50		// remove start position
 	sub	r10, #50	// remove start position
-	mov	r8, #64
-	udiv	r9, r8		// divide by cell width
-	mov	r8, #32
-	udiv	r10, r8		// divide by cell height
+	LSR	r9, #6		// divide by cell width
+	LSR	r10, #5		// divide by cell height
 
 	mov	r8, #11
 	mov	r11, r10	// save r10
 	mul	r11, r8		// multiply y by the # of cells in a row
 	add	r11, r9		// add the x cell position
 
-	ldr	r8, [r7, r11]	// load the map data of the cell the ball is on
+	ldrb	r8, [r7, r11]	// load the map data of the cell the ball is on
 	cmp	r8, #0
+	beq	noCollision
+	cmp	r8, #4
 	beq	noCollision
 
 	sub	r8, #1		// reduce brick toughness by 1
@@ -225,6 +225,7 @@ collideBrick:
 	
 checkHitAbove:
 	mov	r8, r10
+	add	r8, #4
 	cmp	r5, r8	// compare brick y and ball y
 	bgt	checkHitBelow
 	
@@ -235,7 +236,7 @@ checkHitAbove:
 	b	collided
 
 checkHitBelow:
-	add	r8, #28
+	add	r8, #24
 	cmp	r5, r8
 	blt	checkHitLeft
 	
@@ -248,7 +249,7 @@ checkHitBelow:
 checkHitLeft:
 	mov	r8, r9	// save x position
 	cmp	r4, r9
-	bgt	CheckHitRight
+	bgt	checkHitRight
 	
 	cmp	r6, #0	// check if ball moving SE
 	moveq	r6, #1	// change to SW if so
@@ -274,7 +275,7 @@ collided:
 
 exitCheck:
 	mov	r1, r6
-	pop {r4-r8, pc}
+	pop {r4-r12, pc}
 
 @ Data section
 .section .data
