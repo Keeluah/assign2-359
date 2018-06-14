@@ -41,20 +41,15 @@ drawHomeQ:
 
 	b	drawHomeQ
 
-	pop	{r4,pc}
-
 drawQuit:
-	push 	{r4, lr}
-	bl	initDrawHome
 	
-	ldr	r2, =quitGame
-	ldr	r4, =menuPos
-
+	ldr 	r2, =quitGame
 	ldr	r0, [r4]
 	ldr	r1, [r4, #4]
-
 	bl	drawObj
-	
-	b	exit
+	b 	exit
 
-	pop	{r4, pc}
+
+	pop	{r4,pc}
+
+
