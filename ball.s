@@ -210,8 +210,9 @@ collideBrick:
 	cmp	r8, #4
 	beq	noCollision
 
-	sub	r8, #1		// reduce brick toughness by 1
-	str	r8, [r7, r11]	// saves brick toughness
+	mov	r12, r8
+	sub	r12, #1		// reduce brick toughness by 1
+	strb	r12, [r7, r11]	// saves brick toughness
 	
 	// find x cordinate of the brick
 	mov	r8, #64
