@@ -4,10 +4,11 @@
 .global	xDimLoop
 .global main
 .global gameScr
+.global mainLoop
 main:
 	@ ask for frame buffer information
-	ldr 		r0, =frameBufferInfo 	@ frame buffer information structure
-	bl		initFbInfo
+	ldr 	r0, =frameBufferInfo 	@ frame buffer information structure
+	bl	initFbInfo
 
 	bl	initializeDriver		//initialize drivers
 	bl	drawHome
@@ -32,16 +33,21 @@ startScreen:
 //successfully passes button press from snesRead
 mainLoop:
 	bl	snesRead
-	mov	r0, r0
+	mov	r7, r0
 	bl	updatePad
+	mov	r0, r7
 	bl	updateBall
 	bl	drawMap
 	bl	drawingElements
 	ldr	r0, =bPressed
 	ldr	r1, =paddlePosition
 	ldr	r1, [r1]
-	bl	printf
-	//bl	DrawObjects
+	bl	Pause
+	cmp	r0, #1
+	beq	drawHome
+	bl	Restart
+	cmp	r0, #1
+	beq	mainLoop
 	b	mainLoop
 
 
@@ -120,6 +126,34 @@ mapData:
 	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
 	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
 	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+
+.global backUpMap
+backUpMap:
+	.byte	4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4
+	.byte	4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4
+	.byte	4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4
+	.byte	4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4
+	.byte	4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4
+	.byte	4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+	.byte	4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+
 
 .global	test
 test:
